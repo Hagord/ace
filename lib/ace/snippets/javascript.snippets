@@ -1,7 +1,6 @@
 # Prototype
 snippet proto
-	${1:class_name}.prototype.${2:method_name} =
-	function(${3:first_argument}) {
+	${1:class_name}.prototype.${2:method_name} = function(${3:first_argument}) {
 		${4:// body...}
 	};
 # Function
@@ -10,16 +9,18 @@ snippet fun
 		${3:// body...}
 	}
 # Anonymous Function
-snippet f
-	function(${1}) {
-		${3}
-	}${2:;}
+regex /\b(\()?/f//(\))?/
+name f
+	function($1) {
+		${0:$TM_SELECTED_TEXT}
+	};
 # Immediate function
-regex //f\(/\)?/
+trigger \(?f\(
+endTrigger \)?
 snippet f(
 	(function(${1}) {
 		${3:/* code */}
-	}(${2}));
+	}(${1}));
 # if
 snippet if
 	if (${1:true}) {
@@ -157,16 +158,13 @@ regex /^\s*/clas{0,2}/
 	}).call(${1:class}.prototype);
 # 
 snippet for-
-	for (var ${20:i} = ${1:Things}.length; ${20:i}--; ) {
-		${100:${1:Things}[${20:i}];
+	for (var ${1:i} = ${2:Things}.length; ${1:i}--; ) {
+		${0:${2:Things}[${1:i}];}
 	}
-	$0
-
-
 # for (...) {...}
 snippet for
-	for (var ${2:i} = 0; $2 < ${1:Things}.length; $2${3:++}) {
-		${4:$1[$2]}
+	for (var ${1\n:i} = 0; $2 < ${2/\n/:Things}.length; $1${3/\n/:++}) {
+		${0:$2[$1]}
 	}
 # for (...) {...} (Improved Native For-Loop)
 snippet forr
@@ -176,3 +174,29 @@ snippet forr
 snippet for-
 
 snippet for ?in
+
+
+regex /^\s*/for (\w+\b)?( \d+)( \d+)?/
+
+regex /^\s*/for (\w+) in (\w+)/
+
+regex /^\s*/for (\w*) (\w+)(.l?e?n?[ght]{0,3})/
+
+regex /^\s*/for (\w+) in (\w+)/
+
+
+
+#modules
+snippet def
+	define(function(require, exports, module) {
+	"use strict";
+	${includeRepeated:Req}
+	});
+snippet req
+guard ^\s*
+	var ${1/.*\///} = require("${1}");
+	$0
+snippet Req
+guard ^\s*
+	var ${1/.*\/(.)/\u$1/} = require("${1}").${1_0};
+	$0
